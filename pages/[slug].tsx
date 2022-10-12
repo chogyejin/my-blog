@@ -1,7 +1,23 @@
 import React from "react";
-import { getPaths, getPostBySlug } from "../lib/api";
+import { getHTMLByMarkDown, getPaths, getPostBySlug } from "../lib/api";
+
+type Post = {
+  slug: string;
+  content: string;
+  title: string;
+  date: string;
+  author: {
+    name: string;
+    email: string;
+  };
+};
+
+interface Props {
+  post: Post;
+}
 
 const Detail = ({ post }: Props) => {
+  // console.log(post);
   const { title, date, author, content } = post;
 
   return (
@@ -9,12 +25,10 @@ const Detail = ({ post }: Props) => {
       <h1>제목: {title}</h1>
       <h2>작성 일자: {date}</h2>
       <h2>작성자: {author.name}</h2>
-      <div>{content}</div>
+      <div dangerouslySetInnerHTML={{ __html: content }} />
     </div>
   );
 };
-
-const FIELDS = ["slug", "content", "title", "date", "author"];
 
 export const getStaticPaths = async () => {
   const paths = getPaths();
@@ -31,26 +45,13 @@ interface Params {
 
 export const getStaticProps = async ({ params }: Params) => {
   const { slug } = params;
+  const FIELDS = ["slug", "content", "title", "date", "author"];
   const post = getPostBySlug(slug, FIELDS);
+  const content = await getHTMLByMarkDown(post.content);
 
   return {
-    props: { post },
+    props: { post: { ...post, content } },
   };
 };
-
-type Post = {
-  slug: string;
-  content: string;
-  title: string;
-  date: string;
-  author: {
-    name: string;
-    email: string;
-  };
-};
-
-interface Props {
-  post: Post;
-}
 
 export default Detail;

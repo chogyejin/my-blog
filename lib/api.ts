@@ -1,6 +1,8 @@
 import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
+import { remark } from "remark";
+import html from "remark-html";
 
 const PATH_NAME = "__posts";
 
@@ -38,4 +40,10 @@ export const getPostBySlug = (slug: string, fields: string[] = []) => {
   });
 
   return items;
+};
+
+export const getHTMLByMarkDown = async (markdown: string) => {
+  const result = await remark().use(html).process(markdown);
+  console.log(result);
+  return result.toString();
 };
