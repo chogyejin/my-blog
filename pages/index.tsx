@@ -1,19 +1,17 @@
-import Link from "next/link";
+import { SWRConfig } from "swr";
 import { getPaths } from "../lib/api";
+import PostList from "../src/components/PostList";
 
 interface Props {
-  paths: string[];
+  fallback: string[];
 }
 
-const Home = ({ paths }: Props) => {
+const Home = ({ fallback }: Props) => {
   return (
     <div>
-      <h1>목록</h1>
-      {paths.map((path) => (
-        <div key={path}>
-          <Link href={`/${path}`}>{path}</Link>
-        </div>
-      ))}
+      <SWRConfig value={{ fallback }}>
+        <PostList />
+      </SWRConfig>
     </div>
   );
 };
@@ -23,7 +21,7 @@ export const getStaticProps = async () => {
   const paths = slugs.map((value) => value.params.slug);
 
   return {
-    props: { paths },
+    props: { fallback: { "/paths": paths } },
   };
 };
 
