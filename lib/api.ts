@@ -44,6 +44,5 @@ export const getPostBySlug = (slug: string, fields: string[] = []) => {
 
 export const getHTMLByMarkDown = async (markdown: string) => {
   const result = await remark().use(html).process(markdown);
-  console.log(result);
   return result.toString();
 };
