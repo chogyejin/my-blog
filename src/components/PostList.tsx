@@ -11,7 +11,7 @@ const PostList = () => {
 
   return (
     <div>
-      <h1>목록</h1>
+      <h1 style={{ fontFamily: "Noto Sans KR" }}>목록</h1>
       {paths!.map((path) => (
         <div key={path}>
           <Link href={`/${path}`}>{path}</Link>
